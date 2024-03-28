@@ -16,6 +16,12 @@ public class MovieFile
         Movies = new List<Movie>();
         ReadMoviesFromFile();
     }
+    public List<Movie> FindMoviesByTitle(string title)
+{
+    var matches = Movies.Where(m => m.title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+    return matches;
+}
+
 
     private void ReadMoviesFromFile()
     {

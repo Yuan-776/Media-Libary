@@ -6,36 +6,59 @@ class Program
 {
     private static Logger logger = LogManager.GetCurrentClassLogger();
 
-    static void Main(string[] args)
+static void Main(string[] args)
+{
+    logger.Info("Program started");
+    string scrubbedFile = "movies.scrubbed.csv"; 
+    MovieFile movieFile = new MovieFile(scrubbedFile);
+
+    while (true)
     {
-        logger.Info("Program started");
-        string scrubbedFile = "movies.scrubbed.csv"; 
-        MovieFile movieFile = new MovieFile(scrubbedFile);
+        Console.WriteLine("1) Add Movie");
+        Console.WriteLine("2) Display All Movies");
+        Console.WriteLine("3) Find Movie");
+        Console.WriteLine("Enter to quit");
+        var choice = Console.ReadLine();
+        if (string.IsNullOrEmpty(choice)) break;
 
-        while (true)
+        switch (choice)
         {
-            Console.WriteLine("1) Add Movie");
-            Console.WriteLine("2) Display All Movies");
-            Console.WriteLine("Enter to quit");
-            var choice = Console.ReadLine();
-            if (string.IsNullOrEmpty(choice)) break;
-
-            switch (choice)
-            {
-                case "1":
-                    AddMovie(movieFile);
-                    break;
-                case "2":
-                    DisplayAllMovies(movieFile);
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice. Please try again.");
-                    break;
-            }
+            case "1":
+                AddMovie(movieFile);
+                break;
+            case "2":
+                DisplayAllMovies(movieFile);
+                break;
+            case "3":
+                FindMovie(movieFile);
+                break;
+            default:
+                Console.WriteLine("Invalid choice. Please try again.");
+                break;
         }
-
-        logger.Info("Program ended");
     }
+
+    logger.Info("Program ended");
+}
+
+static void FindMovie(MovieFile movieFile)
+{
+    Console.WriteLine("Enter movie title to search:");
+    string searchQuery = Console.ReadLine();
+    var matchingMovies = movieFile.FindMoviesByTitle(searchQuery);
+    if (matchingMovies.Any())
+    {
+        Console.WriteLine($"Found {matchingMovies.Count} matches:");
+        foreach (var movie in matchingMovies)
+        {
+            Console.WriteLine(movie.Display());
+        }
+    }
+    else
+    {
+        Console.WriteLine("No matches found.");
+    }
+}
 
     static void AddMovie(MovieFile movieFile)
     {
