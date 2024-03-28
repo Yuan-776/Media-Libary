@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "TfFRY9gtD152rOForqeY1QDCIH8O+aMosUbTvTuV48Tq8XxHI6Oso72vFjw5Jwmp6dKgv4qW1nhf4e6TJf6IjA==",
+  "dgSpecHash": "wlh8k5UEDYt+ELxV7BZ/TSH1Iy4qCCzZnW2N6kfrOg/+gcvaWABU78UOQ4VUW7FyRH701XIzPDqN46UGbP8whw==",
   "success": true,
   "projectFilePath": "/Users/yuangao/Documents/WCTC/Net database/Media-Libary/Media-Libary.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/yuangao/.nuget/packages/nlog/5.1.1/nlog.5.1.1.nupkg.sha512"
+  ],
   "logs": []
 }
