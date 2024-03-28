@@ -1,14 +1,92 @@
-﻿using NLog;
+﻿using System;
+using System.Collections.Generic;
+using NLog;
 
-// See https://aka.ms/new-console-template for more information
-string path = Directory.GetCurrentDirectory() + "\\nlog.config";
+class Program
+{
+    private static Logger logger = LogManager.GetCurrentClassLogger();
 
-// create instance of Logger
-var logger = LogManager.LoadConfiguration(path).GetCurrentClassLogger();
-logger.Info("Program started");
+    static void Main(string[] args)
+    {
+        logger.Info("Program started");
+        string scrubbedFile = "movies.scrubbed.csv"; 
+        MovieFile movieFile = new MovieFile(scrubbedFile);
 
-string scrubbedFile = FileScrubber.ScrubMovies("movies.csv");
-logger.Info(scrubbedFile);
-MovieFile movieFile = new MovieFile(scrubbedFile);
+        while (true)
+        {
+            Console.WriteLine("1) Add Movie");
+            Console.WriteLine("2) Display All Movies");
+            Console.WriteLine("Enter to quit");
+            var choice = Console.ReadLine();
+            if (string.IsNullOrEmpty(choice)) break;
 
-logger.Info("Program ended");
+            switch (choice)
+            {
+                case "1":
+                    AddMovie(movieFile);
+                    break;
+                case "2":
+                    DisplayAllMovies(movieFile);
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+
+        logger.Info("Program ended");
+    }
+
+    static void AddMovie(MovieFile movieFile)
+    {
+        Console.WriteLine("Enter movie title:");
+        string title = Console.ReadLine();
+
+        if (!movieFile.isUniqueTitle(title))
+        {
+            Console.WriteLine("Movie title already exists.");
+            return;
+        }
+
+        List<string> genres = new List<string>();
+        string input;
+        do
+        {
+            Console.WriteLine("Enter genre (or 'done' to finish):");
+            input = Console.ReadLine();
+            if (input.ToLower() != "done" && !string.IsNullOrWhiteSpace(input))
+            {
+                genres.Add(input);
+            }
+        } while (input.ToLower() != "done");
+
+        Console.WriteLine("Enter director:");
+        string director = Console.ReadLine();
+
+        Console.WriteLine("Enter running time (h:m:s):");
+        TimeSpan runningTime;
+        while (!TimeSpan.TryParse(Console.ReadLine(), out runningTime))
+        {
+            Console.WriteLine("Invalid format. Please enter running time (h:m:s):");
+        }
+
+        Movie newMovie = new Movie
+        {
+            title = title,
+            genres = genres,
+            director = director,
+            runningTime = runningTime
+        };
+
+        movieFile.AddMovie(newMovie);
+        Console.WriteLine("Movie added successfully.");
+    }
+
+    static void DisplayAllMovies(MovieFile movieFile)
+    {
+        foreach (Movie movie in movieFile.Movies)
+        {
+            Console.WriteLine(movie.Display());
+        }
+    }
+}
